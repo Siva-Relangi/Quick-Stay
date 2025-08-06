@@ -137,12 +137,12 @@ const AllRooms = () => {
             >
               {openFilters ? "HIDE" : "SHOW"}
             </span>
-            <span className="lg:block">CLEAR</span>
+            <span className="hidden lg:block">CLEAR</span>
           </div>
         </div>
         <div
           className={`${
-            openFilters ? "h-auto" : "h-0 lg:h auto"
+            openFilters ? "h-auto" : "h-0  lg:h-auto"
           } overflow-hidden transition-all duration-700`}
         >
           <div className="px-5 pt-5">
