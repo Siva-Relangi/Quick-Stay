@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
 
   role: {
     type: String,
-    enum: ["user", "hotel owner"],
+    enum: ["user", "hotelOwner"],
     default: "user",
   },
 
