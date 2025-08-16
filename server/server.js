@@ -1,13 +1,14 @@
+import { clerkMiddleware } from "@clerk/express";
 import cors from "cors";
 import "dotenv/config";
 import express from "express";
-import connectDB from "./configs/db.js";
-import { clerkMiddleware } from '@clerk/express'
-import clerkwebHooks from "./controllers/clerkWebhooks.js";
-import userRouter from "./routes/userRoutes.js";
-import hotelRouter from "./routes/hotelRoutes.js";
 import connectCloudinary from "./configs/cloudinary.js";
+import connectDB from "./configs/db.js";
+import clerkwebHooks from "./controllers/clerkWebhooks.js";
+import hotelRouter from "./routes/hotelRoutes.js";
 import roomRouter from "./routes/roomRoutes.js";
+import userRouter from "./routes/userRoutes.js";
+import bookingRouter from "./routes/bookingRoutes.js";
 
 connectDB();
 connectCloudinary();
@@ -28,11 +29,13 @@ app.get("/", (req, res) => {
   res.send("API is working");
 });
 
-app.use('/api/user', userRouter);
+app.use("/api/user", userRouter);
 
-app.use('/api/hotels', hotelRouter);
+app.use("/api/hotels", hotelRouter);
 
-app.use('/api/rooms', roomRouter);
+app.use("/api/rooms", roomRouter);
+
+app.use("/api/bookings", bookingRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
