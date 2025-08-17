@@ -1,10 +1,30 @@
 import { useAuth, useUser } from "@clerk/clerk-react";
 import axios from "axios";
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
+
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      toast.error("Session expired. Please log in again.");
+    } else if (error.response?.status >= 500) {
+      toast.error("Server error. Please try again later.");
+    } else if (!error.response) {
+      toast.error("Network error. Please check your connection.");
+    }
+    return Promise.reject(error);
+  }
+);
 
 const AppContext = createContext();
 
@@ -18,6 +38,7 @@ export const AppProvider = ({ children }) => {
   const [showHotelReg, setShowHotelReg] = useState(false);
   const [searchedCities, setSearchedCities] = useState([]);
   const [rooms, setRooms] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const fetchRooms = async () => {
     try {
@@ -37,11 +58,13 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  const fetchUser = async () => {
+  const fetchUser = useCallback(async () => {
     try {
+      const token = await getToken();
+      if (!token) return;
       const { data } = await axios.get("/api/user", {
         headers: {
-          Authorization: `Bearer ${await getToken()}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -57,11 +80,16 @@ export const AppProvider = ({ children }) => {
     } catch (error) {
       toast.error(error.message);
     }
-  };
+  }, [getToken]);
 
   useEffect(() => {
-    if (user) fetchUser();
-  }, [user]);
+    if (user) {
+      fetchUser();
+    } else {
+      setIsOwner(false);
+      setSearchedCities([]);
+    }
+  }, [user, fetchUser]);
 
   useEffect(() => {
     fetchRooms();
@@ -81,6 +109,10 @@ export const AppProvider = ({ children }) => {
     setSearchedCities,
     rooms,
     setRooms,
+    loading,
+    setLoading,
+    fetchRooms,
+    fetchUser,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
