@@ -110,14 +110,6 @@ const Navbar = () => {
 
       {/* Desktop Right */}
       <div className="hidden md:flex items-center gap-4">
-        <img
-          src={assets.searchIcon}
-          alt="Search"
-          className={`${
-            isScrolled && "invert"
-          } h-7 transition-all duration-500`}
-        />
-
         {user ? (
           <UserButton>
             <UserButton.MenuItems>
