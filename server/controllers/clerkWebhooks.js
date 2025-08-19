@@ -2,18 +2,12 @@ import { Webhook } from "svix"
 import User from "../models/User.js"
 
 const clerkwebHooks = async (req, res) => {
-  console.log("[v0] Webhook endpoint called!")
-  console.log("[v0] Request method:", req.method)
-  console.log("[v0] Request headers:", req.headers)
-  console.log("[v0] Request body type:", typeof req.body)
 
   try {
     if (!process.env.CLERK_WEBHOOK_SECRET) {
       console.error("CLERK_WEBHOOK_SECRET is not set in environment variables")
       return res.status(500).json({ success: false, message: "Webhook secret not configured" })
     }
-
-    console.log("[v0] Webhook secret configured:", process.env.CLERK_WEBHOOK_SECRET?.substring(0, 10) + "...")
 
     //Create a Svix instance with clerk webhook secret
     const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET)
@@ -25,8 +19,6 @@ const clerkwebHooks = async (req, res) => {
       "svix-signature": req.headers["svix-signature"],
     }
 
-    console.log("[v0] Svix headers:", headers)
-
     const body = req.body
     const bodyString = Buffer.isBuffer(body) ? body.toString() : JSON.stringify(body)
 
@@ -34,7 +26,6 @@ const clerkwebHooks = async (req, res) => {
 
     //verifying headers
     await whook.verify(bodyString, headers)
-    console.log("[v0] Webhook signature verified successfully")
 
     //Getting Data from request body
     const { data, type } = JSON.parse(bodyString)
@@ -92,8 +83,6 @@ const clerkwebHooks = async (req, res) => {
     }
     res.json({ success: true, message: "Webhook processed successfully" })
   } catch (error) {
-    console.error("[v0] Webhook processing error:", error.message)
-    console.error("[v0] Full error:", error)
     res.status(500).json({ success: false, message: error.message })
   }
 }
