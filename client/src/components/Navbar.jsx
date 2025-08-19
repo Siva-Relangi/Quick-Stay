@@ -118,7 +118,7 @@ const Navbar = () => {
 
         {user && (
           <button
-            className={`border px-4 py-1 text-sm font-light rounded-full cursor-pointer hover:bg-opacity-10 hover:bg-current transition-all ${
+            className={`border px-4 py-1 text-sm font-light rounded-full cursor-pointer ${
               isScrolled ? "text-black border-black" : "text-white border-white"
             }`}
             onClick={() =>
