@@ -1,14 +1,21 @@
-import React, { useEffect } from 'react';
-import Hero from '../components/Hero';
-import FeaturedDestination from '../components/FeaturedDestination';
-import ExclusiveOffers from '../components/ExclusiveOffers';
-import Testimonial from '../components/Testimonial';
-import NewsLetter from '../components/NewsLetter';
-import RecommendedHotels from '../components/RecommendedHotels';
-import { useAppContext } from '../context/AppContext';
+import { useEffect } from "react";
+import ExclusiveOffers from "../components/ExclusiveOffers";
+import FeaturedDestination from "../components/FeaturedDestination";
+import Hero from "../components/Hero";
+import NewsLetter from "../components/NewsLetter";
+import RecommendedHotels from "../components/RecommendedHotels";
+import Testimonial from "../components/Testimonial";
+import { useAppContext } from "../context/AppContext";
 
 const LoadingSpinner = () => (
-  <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+  <div
+    style={{
+      minHeight: "60vh",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    }}
+  >
     <div className="loader">Loading...</div>
   </div>
 );
@@ -25,11 +32,11 @@ const Home = () => {
 
   return (
     <>
+      <Hero />
       {loading ? (
         <LoadingSpinner />
       ) : (
         <>
-          <Hero />
           <RecommendedHotels />
           <FeaturedDestination />
           <ExclusiveOffers />
