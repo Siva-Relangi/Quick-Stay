@@ -7,43 +7,37 @@ import RecommendedHotels from "../components/RecommendedHotels";
 import Testimonial from "../components/Testimonial";
 import { useAppContext } from "../context/AppContext";
 
-const LoadingSpinner = () => (
-  <div
-    style={{
-      minHeight: "60vh",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    }}
-  >
-    <div className="loader">Loading...</div>
+
+const SkeletonRoomCard = () => (
+  <div className="animate-pulse bg-gray-200 rounded-xl h-48 w-full mb-4">
+    {/* Add more divs for image, title, etc. as needed */}
+    <div className="h-32 bg-gray-300 rounded-t-xl"></div>
+    <div className="p-4">
+      <div className="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
+      <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+    </div>
   </div>
 );
 
 const Home = () => {
-  const { loading, setLoading, fetchRooms, rooms } = useAppContext();
-
-  useEffect(() => {
-    setLoading(true);
-    fetchRooms().finally(() => setLoading(false));
-    // Only run on mount
-    // eslint-disable-next-line
-  }, []);
+  const { loading, rooms } = useAppContext();
 
   return (
     <>
       <Hero />
+      <RecommendedHotels />
       {loading ? (
-        <LoadingSpinner />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, i) => (
+            <SkeletonRoomCard key={i} />
+          ))}
+        </div>
       ) : (
-        <>
-          <RecommendedHotels />
-          <FeaturedDestination />
-          <ExclusiveOffers />
-          <Testimonial />
-          <NewsLetter />
-        </>
+        <FeaturedDestination />
       )}
+      <ExclusiveOffers />
+      <Testimonial />
+      <NewsLetter />
     </>
   );
 };
